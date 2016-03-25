@@ -28,13 +28,18 @@
     NSString *namesFileContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *items = [namesFileContent componentsSeparatedByString:@"\n"];
     NSMutableArray *result = [NSMutableArray new];
-    for (NSInteger i = 0; i < items.count / 3; i++)
+    for (NSInteger i = 0; i < items.count / 3; i++) {
         [result addObject:[CDBook bookWithID:i + 1 work:items[i * 3] andAuthor:items[i * 3 + 1] inManagedObjectContext:self.managedObjectContext]];
+    }
     [self saveContext];
 }
 
 - (NSInteger)booksCount {
     
+}
+
+- (void)deleteBook:(CDBook *)book {
+    уничтожаем книгу
 }
 
 - (NSArray *)booksArrayUsingQuery:(NSInteger)offset count:(NSInteger)count {
