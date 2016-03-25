@@ -10,6 +10,8 @@
 
 @interface CoreDataWorker : NSObject
 
-- (NSArray *)booksArrayUsingQuery:(NSInteger)shift count:(NSInteger)count;
+- (NSInteger)booksCount;
+
+- (NSArray *)booksArrayUsingQuery:(NSInteger)offset count:(NSInteger)count;
 
 @end

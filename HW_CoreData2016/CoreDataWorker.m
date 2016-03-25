@@ -22,6 +22,8 @@
 @synthesize managedObjectModel = _managedObjectModel;
 
 - (void)fillBooksWithDefaultValues {
+    не забываем вызвать этот метод, если у нас таблица пустая
+    
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"books" ofType:@"txt"];
     NSString *namesFileContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *items = [namesFileContent componentsSeparatedByString:@"\n"];
@@ -31,9 +33,13 @@
     [self saveContext];
 }
 
-- (NSArray *)booksArrayUsingQuery:(NSInteger)shift count:(NSInteger)count {
-//    тут, по-моему, нужен какой-то код
-//    fetchLimit, fetchOffset вам в руки
+- (NSInteger)booksCount {
+    
+}
+
+- (NSArray *)booksArrayUsingQuery:(NSInteger)offset count:(NSInteger)count {
+    тут, по-моему, нужен какой-то код
+    fetchLimit, fetchOffset вам в руки
     return @[];
 }
 
