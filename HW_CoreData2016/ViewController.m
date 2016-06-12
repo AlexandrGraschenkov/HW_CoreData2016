@@ -10,25 +10,44 @@
 #import <CoreData/CoreData.h>
 #import "LimitedArray.h"
 #import "CDBook.h"
+#import "CoreDataWorker.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) LimitedArray *arr;
+@property CoreDataWorker *worker;
+
+@property NSInteger count;
+@property NSInteger currentPage;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.worker = [CoreDataWorker new];
     self.arr = [LimitedArray new];
-    self.arr[0] = @10;
-    self.arr[1] = @20;
-    for (int i = 0; i < 100; i++) {
-        [self.arr addObject:@(i)];
-    }
-    NSLog(@"Count %ld", self.arr.count);
+    self.currentPage = 0;
+    [self.arr addObjectsFromArray:[self.worker booksArrayUsingQuery:self.currentPage count:40]];
 }
 
-пустота и безысходность
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.worker.booksCount;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.currentPage > indexPath.row / 40) {
+        [self.arr removeAllObjects];
+        self.currentPage = self.currentPage - 1;
+        [self.arr addObjectsFromArray:[self.worker booksArrayUsingQuery:self.currentPage * 40 count:40]];
+    }
+    if (self.currentPage < indexPath.row / 40) {
+        [self.arr removeAllObjects];
+        self.currentPage = self.currentPage + 1;
+        [self.arr addObjectsFromArray:[self.worker booksArrayUsingQuery:self.currentPage * 40 count:40]];
+    }
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", [self.arr[indexPath.row % 40] uid], [self.arr[indexPath.row % 40] work]];
+    return cell;
+}
 
 @end
