@@ -22,7 +22,7 @@
 @synthesize managedObjectModel = _managedObjectModel;
 
 - (void)fillBooksWithDefaultValues {
-    не забываем вызвать этот метод, если у нас таблица пустая
+//    не забываем вызвать этот метод, если у нас таблица пустая
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"books" ofType:@"txt"];
     NSString *namesFileContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
@@ -35,17 +35,26 @@
 }
 
 - (NSInteger)booksCount {
-    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"CDBook" inManagedObjectContext:self.managedObjectContext]];
+    [request setIncludesSubentities:NO];
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:nil];
+    return count;
 }
 
 - (void)deleteBook:(CDBook *)book {
-    уничтожаем книгу
+//    уничтожаем книгу
 }
 
 - (NSArray *)booksArrayUsingQuery:(NSInteger)offset count:(NSInteger)count {
-    тут, по-моему, нужен какой-то код
-    fetchLimit, fetchOffset вам в руки
-    return @[];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"CDBook" inManagedObjectContext:self.managedObjectContext]];
+    request.fetchLimit = count;
+    request.fetchOffset = offset;
+    NSSortDescriptor *idnSort = [NSSortDescriptor sortDescriptorWithKey:@"uid" ascending:YES];
+    request.sortDescriptors = @[idnSort];
+    NSArray *results = [self.managedObjectContext executeFetchRequest:request error:nil];
+    return results;
 }
 
 - (NSURL *)applicationDocumentsDirectory {
